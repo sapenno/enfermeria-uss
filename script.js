@@ -1,4 +1,3 @@
-// Datos: [nombre, código, [prerrequisitos]]
 const ramosPorSemestre = {
   "Primer semestre": [
     ["Química General y Orgánica", "DQUI1050", []],
@@ -23,19 +22,65 @@ const ramosPorSemestre = {
     ["Enfermería en el Curso de la Vida", "ENFEC004", []],
     ["Educación para la Salud", "ENFEC005", []],
     ["Comunicación Interdisciplinar", "ENFEC006", []]
+  ],
+  "Cuarto semestre": [
+    ["Gestión del Cuidado del Adulto 1", "ENFED005", ["ENFEC004"]],
+    ["Ética", "FORI0002", ["FORI0001"]],
+    ["Bases de práctica basada en evidencia", "ENFED006", []],
+    ["Administración para la gestión del cuidado", "ENFED007", []],
+    ["HITO Evaluativo Integrativo 1", "ENFED008", ["ENFEC004", "ENFEC005", "ENFEC006", "DMOR0023", "BDIO1098"]]
+  ],
+  "Quinto semestre": [
+    ["Persona y sociedad", "FORI0003", ["FORI0002"]],
+    ["Gestión del cuidado del adulto 2", "ENFEE004", ["ENFED005"]],
+    ["Bioestadística y Salud", "DCEX0015", []],
+    ["Epidemiología", "DSPU0014", ["DSPU0012"]],
+    ["Medioambiente, salud y enfermería", "ENFEE005", ["ENFED007"]],
+    ["Gestión de proyectos en Salud", "ENFEE006", ["ENFED007"]]
+  ],
+  "Sexto semestre": [
+    ["Electivo 1: Formación Integral", "ELECFORI01", []],
+    ["Gestión del cuidado en la persona mayor", "ENFEF005", ["ENFEE004"]],
+    ["Enfermería en Salud Mental y Psiquiatría", "ENFEF006", ["ENFEE004"]],
+    ["Liderazgo y toma de decisiones en salud", "ENFEF007", ["ENFEE005"]],
+    ["Metodología de la Investigación", "DSPU0013", []]
+  ],
+  "Séptimo semestre": [
+    ["Electivo 2: Formación Integral", "ELECFORI02", []],
+    ["Gestión del cuidado en la niñez y adolescencia", "ENFEG003", ["ENFEE004"]],
+    ["Enfermería en Salud Familiar y Comunitaria", "ENFEG004", ["ENFEF006"]],
+    ["Gerencia y Gobernanza para la Gestión en Salud", "ENFEG005", ["ENFEF007"]],
+    ["Bioética", "DEBI0001", []],
+    ["Proyecto de Investigación", "ENFEG006", ["DSPU0013"]]
+  ],
+  "Octavo semestre": [
+    ["Electivo 3: Formación Integral", "ELECFORI03", []],
+    ["Enfermería de Urgencia", "ENFEH002", ["ENFEG003"]],
+    ["Enfermería en Oncología y Cuidados Paliativos", "ENFEH003", ["ENFEG004"]],
+    ["Liderazgo para la Gestión del Cambio en Equipos de Salud", "ENFEH004", ["ENFEG005"]],
+    ["Práctica Basada en la Evidencia", "ENFEH005", ["ENFEG006"]],
+    ["HITO Evaluativo Integrativo 2", "ENFEH006", ["ENFEG003", "ENFEG004", "ENFEG005", "ENFEG006"]]
+  ],
+  "Noveno semestre": [
+    ["Gestión de Carrera y Desarrollo Profesional", "ELECDEE03", []],
+    ["Internado Clínico Asistencial", "ENFEI003", ["ENFEH006"]],
+    ["Electivo Disciplinar 1", "ELECENFE01", ["ENFEH006"]]
+  ],
+  "Décimo semestre": [
+    ["Internado en Salud Familiar y Comunitaria", "ENFEJ001", ["ENFEH006"]],
+    ["Internado de Gestión en Salud", "ENFEJ002", ["ENFEH006"]],
+    ["Electivo Disciplinar 2", "ELECENFE02", ["ENFEH006"]]
   ]
-  // Puedes seguir agregando los siguientes semestres aquí...
 };
 
-// Estados
+// Lógica JS igual que antes ↓
+
 let aprobados = new Set();
 let desbloqueados = new Set();
 
-// Elementos DOM
 const malla = document.getElementById("malla");
 const detalle = document.getElementById("detalle");
 
-// Inicializar desbloqueados (sin prerrequisitos)
 function inicializarDesbloqueados() {
   desbloqueados.clear();
   for (const sem in ramosPorSemestre) {
@@ -45,12 +90,10 @@ function inicializarDesbloqueados() {
   }
 }
 
-// Verificar si todos los prerrequisitos de un ramo están aprobados
 function prerrequisitosAprobados(prereqs) {
   return prereqs.every(cod => aprobados.has(cod));
 }
 
-// Actualizar lista de ramos desbloqueados
 function actualizarDesbloqueados() {
   let cambio = false;
   for (const semestre in ramosPorSemestre) {
@@ -61,22 +104,17 @@ function actualizarDesbloqueados() {
       }
     }
   }
-  if (cambio) renderMalla(); // Re-render si hay cambios
+  if (cambio) renderMalla();
 }
 
-// Crear un ramo como tarjeta DOM
 function crearTarjeta(nombre, codigo, prereqs) {
   const div = document.createElement("div");
   div.className = "ramo";
   div.textContent = `${nombre}\n(${codigo})`;
 
-  // Bloqueado
   if (!desbloqueados.has(codigo)) div.classList.add("bloqueado");
-
-  // Aprobado
   if (aprobados.has(codigo)) div.classList.add("aprobado");
 
-  // Evento clic
   div.addEventListener("click", () => {
     if (!aprobados.has(codigo)) {
       aprobados.add(codigo);
@@ -91,7 +129,6 @@ function crearTarjeta(nombre, codigo, prereqs) {
   return div;
 }
 
-// Mostrar detalle de un ramo
 function mostrarDetalle(nombre, codigo, prereqs) {
   detalle.classList.remove("hidden");
   const requisitos = prereqs.length > 0 ? prereqs.join(", ") : "Ninguno";
@@ -102,7 +139,6 @@ function mostrarDetalle(nombre, codigo, prereqs) {
   `;
 }
 
-// Renderizar la malla completa
 function renderMalla() {
   malla.innerHTML = "";
   for (const semestre in ramosPorSemestre) {
@@ -126,6 +162,5 @@ function renderMalla() {
   }
 }
 
-// Inicializar
 inicializarDesbloqueados();
 renderMalla();
